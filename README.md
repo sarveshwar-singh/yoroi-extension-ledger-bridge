@@ -1,31 +1,22 @@
-# yoroi-extension-ledger-bridge-connector
-Hosted [Github page](https://emurgo.github.io/yoroi-extension-ledger-bridge/).
+# yoroi-extension-ledger-bridge
 
-# Overview
-This is the [gh-pages](https://github.com/Emurgo/yoroi-extension-ledger-bridge/tree/gh-pages) branch which is hosted as Github pages.
+## Overview 
 
-Here we host [ledgerjs-hw-app-cardano](https://www.npmjs.com/package/@cardano-foundation/ledgerjs-hw-app-cardano) in order to communicate with the actual Ledger device using following [Transport layers](https://github.com/LedgerHQ/ledgerjs#ledgerhqhw-transport-).
-- [hw-transport-u2f](https://www.npmjs.com/package/@ledgerhq/hw-transport-u2f)
-- [hw-transport-webusb](https://www.npmjs.com/package/@ledgerhq/hw-transport-webusb)
+To connect to the Ledger device, we need to use a u2f connection (WebUSB is rejected by Firefox). However, [u2f doesn't work in extensions](https://bugs.chromium.org/p/chromium/issues/detail?id=823736) and so to fix this, we host the u2f connection on a Github Pages and then add that to Yoroi through an iframe.
 
-# Development
+## Implementation
 
-```
-yarn
-yarn run build
-yarn run start
-```
+We host [cardano-foundation/ledgerjs-hw-app-cardano](https://github.com/cardano-foundation/ledgerjs-hw-app-cardano) on the `gh-pages` [branch](https://github.com/Emurgo/yoroi-extension-ledger-bridge/tree/gh-pages) the interface to connect to this page on the `master` branch.
 
-* **It will run on https://localhost:3000/**.
-* You can check for connected devices by pressing [Get Connected Device Version] button:
-![image](https://user-images.githubusercontent.com/19986226/56442802-f7495580-632c-11e9-9bdf-aea7b2458712.png)
-**Output will be displayed in the browser's console log**.
+Hosted page [link](https://emurgo.github.io/yoroi-extension-ledger-bridge/).
 
-# Production
+To use this interface, simply add the `master` branch as a dependency to your `node` project.
+
+**Note**: Assumes wallet is BIP44 compliant
+
+## Build
 
 ```
-yarn
-yarn run build
+yarn install
+yarn build
 ```
-
-* **Push all the changes to the [gh-pages](https://github.com/Emurgo/yoroi-extension-ledger-bridge/tree/gh-pages) branch, hosted [Github page](https://emurgo.github.io/yoroi-extension-ledger-bridge/) will be updated autmatically after few minutes.**
