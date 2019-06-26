@@ -14495,7 +14495,7 @@ SafeBuffer.allocUnsafeSlow = function (size) {
 },{"buffer":26}],439:[function(require,module,exports){
 module.exports={
   "name": "yoroi-extension-ledger-bridge-connector",
-  "version": "1.1.2",
+  "version": "1.1.3",
   "description": "Yoroi Extension Ledger hardware wallet bridge connector",
   "author": "EMURGO.io",
   "license": "MIT",
