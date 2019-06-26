@@ -19,7 +19,7 @@ const HARDENED = 0x80000000;
 const PURPOSE = 44;
 const COIN_TYPE = 1815; // Cardano
 
-const BRIDGE_URL = 'https://sarveshwar-singh.github.io/yoroi-extension-ledger-bridge';
+const BRIDGE_URL = 'https://sarveshwar-singh.github.io/yoroi-extension-ledger-bridge-webauthn';
 export const YOROI_LEDGER_BRIDGE_IFRAME_NAME = 'YOROI-LEDGER-BRIDGE-IFRAME';
 
 type MessageType = {
@@ -50,7 +50,7 @@ export class LedgerBridge extends EventEmitter {
   ) {
     super();
     this.isReady = false;
-    this.bridgeUrl = bridgeOverride + '?' + connectionType;
+    this.bridgeUrl = bridgeOverride;
     this.iframe = (iframe) ? iframe : _setupIframe(this.bridgeUrl);
     this.iframe.onload = () => {
       this.isReady = true;
@@ -190,7 +190,6 @@ function _setupIframe (bridgeUrl: string): HTMLIFrameElement {
   const iframe = document.createElement('iframe');
   iframe.src = bridgeUrl;
   iframe.id = YOROI_LEDGER_BRIDGE_IFRAME_NAME;
-  iframe.setAttribute('allow', 'webusb');
   
   if (document.head) {
     document.head.appendChild(iframe);
