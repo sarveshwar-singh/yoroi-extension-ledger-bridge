@@ -14895,7 +14895,7 @@ var YoroiLedgerBridge = function () {
   }, {
     key: 'sendMessageToExtension',
     value: function sendMessageToExtension(msg) {
-      window.opener.postMessage(msg, '*');
+      window.parent.postMessage(msg, '*');
     }
   }, {
     key: 'ledgerErrToMessage',

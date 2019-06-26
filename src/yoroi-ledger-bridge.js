@@ -263,7 +263,7 @@ export default class YoroiLedgerBridge {
   }
 
   sendMessageToExtension(msg: MessageType): void {
-    window.opener.postMessage(msg, '*');
+    window.parent.postMessage(msg, '*');
   }  
 
   ledgerErrToMessage (err: any): any {
