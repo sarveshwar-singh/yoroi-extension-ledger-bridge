@@ -66,6 +66,7 @@ export default class YoroiLedgerBridge {
           success: true,
           payload: res,
       });
+      return res;
     } catch (err) {
       console.error(`[YOROI-LB]::getVersion::${replyAction}::error::${JSON.stringify(err)}`);
       const e = this.ledgerErrToMessage(err);
@@ -105,6 +106,7 @@ export default class YoroiLedgerBridge {
           success: true,
           payload: res,
       });
+      return res;
     } catch (err) {
       console.error(`[YOROI-LB]::getExtendedPublicKey::${replyAction}::error::${JSON.stringify(err)}`);
       const e = this.ledgerErrToMessage(err)

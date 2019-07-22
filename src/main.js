@@ -23,12 +23,18 @@ const init = async () => {
     // }
     bridge = new YoroiLedgerBridge();
 
-    window.onload = function(e) { 
-      const button = document.getElementById("versionButton");
-      if (!button) {
+    window.onload = function(e) {
+      const buttonLog = document.getElementById("versionButton");
+      if (!buttonLog) {
         return;
       }
-      button.addEventListener('click', async () => logConnectedDeviceVersion());
+      buttonLog.addEventListener('click', async () => logConnectedDeviceVersion());
+
+      const buttonKey = document.getElementById("getExtendedPublicKey");
+      if (!buttonKey) {
+        return;
+      }
+      buttonKey.addEventListener('click', async () => logGetExtendedPublicKey());      
     }
 
     if (bridge) {
@@ -54,9 +60,24 @@ const onError = (error) => {
  */
 const logConnectedDeviceVersion = async () => {
   try {
-    const deviceVersion = await bridge.getConnectedDeviceVersion();
+    const result = await bridge.getConnectedDeviceVersion();
     console.info('[YOROI-LB] Connected Ledger device version: '
-      + JSON.stringify(deviceVersion, null , 2));
+      + JSON.stringify(result, null , 2));
+  } catch (error) {
+    console.error(error);
+    console.info('[YOROI-LB] '
+      + 'Is your Ledger Nano S device connected to your system\'s USB port?');
+  }
+}
+
+/**
+ * Test Ledger connection : Console logGetExtendedPublicKey
+ */
+const logGetExtendedPublicKey = async () => {
+  try {
+    const result = await bridge.getExtendedPublicKey('getExtendedPublicKey', [2147483692, 2147485463, 2147483648]);
+    console.info('[YOROI-LB] logGetExtendedPublicKey: '
+      + JSON.stringify(result, null , 2));
   } catch (error) {
     console.error(error);
     console.info('[YOROI-LB] '
