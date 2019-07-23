@@ -54,6 +54,7 @@ export default class YoroiLedgerBridge {
    * const { major, minor, patch, flags } = await app.getVersion();
    */
   async getVersion(
+    source: window,
     replyAction: string
   ): Promise<void> {
     console.debug(`[YOROI-LB]::getVersion::${replyAction}::args::`);
@@ -61,7 +62,8 @@ export default class YoroiLedgerBridge {
     try {
       const adaApp = new AdaApp(transport);
       const res = await adaApp.getVersion();
-      this.sendMessageToExtension({
+      this.sendMessageToExtension(source,
+        {
           action: replyAction,
           success: true,
           payload: res,
@@ -70,7 +72,8 @@ export default class YoroiLedgerBridge {
     } catch (err) {
       console.error(`[YOROI-LB]::getVersion::${replyAction}::error::${JSON.stringify(err)}`);
       const e = this.ledgerErrToMessage(err);
-      this.sendMessageToExtension({
+      this.sendMessageToExtension(source,
+        {
         action: replyAction,
         success: false,
         payload: { error: e.toString() },
@@ -93,6 +96,7 @@ export default class YoroiLedgerBridge {
    * 
    */
   async getExtendedPublicKey(
+    source: window,
     replyAction: string,
     hdPath: BIP32Path
   ): Promise<void> {
@@ -101,7 +105,8 @@ export default class YoroiLedgerBridge {
     try {
       const adaApp = new AdaApp(transport);
       const res = await adaApp.getExtendedPublicKey(hdPath);
-      this.sendMessageToExtension({
+      this.sendMessageToExtension(source,
+        {
           action: replyAction,
           success: true,
           payload: res,
@@ -110,7 +115,8 @@ export default class YoroiLedgerBridge {
     } catch (err) {
       console.error(`[YOROI-LB]::getExtendedPublicKey::${replyAction}::error::${JSON.stringify(err)}`);
       const e = this.ledgerErrToMessage(err)
-      this.sendMessageToExtension({
+      this.sendMessageToExtension(source,
+        {
         action: replyAction,
         success: false,
         payload: { error: e.toString() },
@@ -126,6 +132,7 @@ export default class YoroiLedgerBridge {
    * @returns { txHashHex, witnesses }
    */
   async signTransaction(
+    source: window,
     replyAction: string,
     inputs: Array<InputTypeUTxO>,
     outputs: Array<OutputTypeAddress | OutputTypeChange>
@@ -135,7 +142,8 @@ export default class YoroiLedgerBridge {
     try {
       const adaApp = new AdaApp(transport);
       const res = await adaApp.signTransaction(inputs, outputs);
-      this.sendMessageToExtension({
+      this.sendMessageToExtension(source,
+        {
           action: replyAction,
           success: true,
           payload: res,
@@ -143,7 +151,8 @@ export default class YoroiLedgerBridge {
     } catch (err) {
       console.error(`[YOROI-LB]::signTransaction::${replyAction}::error::${JSON.stringify(err)}`);
       const e = this.ledgerErrToMessage(err);
-      this.sendMessageToExtension({
+      this.sendMessageToExtension(source,
+        {
           action: replyAction,
           success: false,
           payload: { error: e.toString() },
@@ -169,6 +178,7 @@ export default class YoroiLedgerBridge {
    * @return {Promise<{ address58:string }>} The address for the given path.
    */
   async deriveAddress(
+    source: window,
     replyAction: string,
     hdPath: BIP32Path
   ): Promise<void> {
@@ -177,7 +187,8 @@ export default class YoroiLedgerBridge {
     try {
       const adaApp = new AdaApp(transport);
       const res = await adaApp.deriveAddress(hdPath)
-      this.sendMessageToExtension({
+      this.sendMessageToExtension(source,
+        {
           action: replyAction,
           success: true,
           payload: res,
@@ -185,7 +196,8 @@ export default class YoroiLedgerBridge {
     } catch (err) {
       console.error(`[YOROI-LB]::deriveAddress::${replyAction}::error::${JSON.stringify(err)}`);
       const e = this.ledgerErrToMessage(err);
-      this.sendMessageToExtension({
+      this.sendMessageToExtension(source,
+        {
           action: replyAction,
           success: false,
           payload: { error: e.toString() },
@@ -212,6 +224,7 @@ export default class YoroiLedgerBridge {
    * @return {Promise<void>}
    */
   async showAddress(
+    source: window,
     replyAction: string,
     hdPath: BIP32Path
   ): Promise<void> {
@@ -220,7 +233,8 @@ export default class YoroiLedgerBridge {
     try {
       const adaApp = new AdaApp(transport);
       adaApp.showAddress(hdPath)
-      this.sendMessageToExtension({
+      this.sendMessageToExtension(source,
+        {
           action: replyAction,
           success: true,
           payload: undefined
@@ -228,7 +242,8 @@ export default class YoroiLedgerBridge {
     } catch (err) {
       console.debug(`[YOROI-LB]::showAddress::${replyAction}::error::${JSON.stringify(err)}`);
       const e = this.ledgerErrToMessage(err);
-      this.sendMessageToExtension({
+      this.sendMessageToExtension(source,
+        {
           action: replyAction,
           success: false,
           payload: { error: e.toString() },
@@ -245,27 +260,28 @@ export default class YoroiLedgerBridge {
         const replyAction = `${action}-reply`;
         switch (action) {
           case 'ledger-get-version':
-            this.getVersion(replyAction)
+            this.getVersion(e.source, replyAction)
             break;
           case 'ledger-get-extended-public-key':
-            this.getExtendedPublicKey(replyAction, params.hdPath)
+            this.getExtendedPublicKey(e.source, replyAction, params.hdPath)
             break;
           case 'ledger-sign-transaction':
-            this.signTransaction(replyAction, params.inputs, params.outputs)
+            this.signTransaction(e.source, replyAction, params.inputs, params.outputs)
             break;
           case 'ledger-derive-address':
-            this.deriveAddress(replyAction, params.hdPath)
+            this.deriveAddress(e.source, replyAction, params.hdPath)
             break;
           case 'ledger-show-address':
-            this.showAddress(replyAction, params.hdPath)
+            this.showAddress(e.source, replyAction, params.hdPath)
             break;
         }
       }
     }, false)
   }
 
-  sendMessageToExtension(msg: MessageType): void {
-    window.parent.postMessage(msg, '*');
+  sendMessageToExtension(source: window, msg: MessageType): void {
+    // window.parent.postMessage(msg, '*');
+    source.postMessage(msg, '*');
   }  
 
   ledgerErrToMessage (err: any): any {

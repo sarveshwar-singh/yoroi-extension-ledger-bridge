@@ -14677,13 +14677,13 @@ var YoroiLedgerBridge = function () {
 
   }, {
     key: 'getVersion',
-    value: async function getVersion(replyAction) {
+    value: async function getVersion(source, replyAction) {
       console.debug('[YOROI-LB]::getVersion::' + replyAction + '::args::');
       var transport = await _hwTransportWebauthn2.default.create();
       try {
         var adaApp = new _ledgerjsHwAppCardano2.default(transport);
         var res = await adaApp.getVersion();
-        this.sendMessageToExtension({
+        this.sendMessageToExtension(source, {
           action: replyAction,
           success: true,
           payload: res
@@ -14692,7 +14692,7 @@ var YoroiLedgerBridge = function () {
       } catch (err) {
         console.error('[YOROI-LB]::getVersion::' + replyAction + '::error::' + JSON.stringify(err));
         var e = this.ledgerErrToMessage(err);
-        this.sendMessageToExtension({
+        this.sendMessageToExtension(source, {
           action: replyAction,
           success: false,
           payload: { error: e.toString() }
@@ -14717,13 +14717,13 @@ var YoroiLedgerBridge = function () {
 
   }, {
     key: 'getExtendedPublicKey',
-    value: async function getExtendedPublicKey(replyAction, hdPath) {
+    value: async function getExtendedPublicKey(source, replyAction, hdPath) {
       console.debug('[YOROI-LB]::getExtendedPublicKey::' + replyAction + '::args::hdPath::' + JSON.stringify(hdPath));
       var transport = await _hwTransportWebauthn2.default.create();
       try {
         var adaApp = new _ledgerjsHwAppCardano2.default(transport);
         var res = await adaApp.getExtendedPublicKey(hdPath);
-        this.sendMessageToExtension({
+        this.sendMessageToExtension(source, {
           action: replyAction,
           success: true,
           payload: res
@@ -14732,7 +14732,7 @@ var YoroiLedgerBridge = function () {
       } catch (err) {
         console.error('[YOROI-LB]::getExtendedPublicKey::' + replyAction + '::error::' + JSON.stringify(err));
         var e = this.ledgerErrToMessage(err);
-        this.sendMessageToExtension({
+        this.sendMessageToExtension(source, {
           action: replyAction,
           success: false,
           payload: { error: e.toString() }
@@ -14750,13 +14750,13 @@ var YoroiLedgerBridge = function () {
 
   }, {
     key: 'signTransaction',
-    value: async function signTransaction(replyAction, inputs, outputs) {
+    value: async function signTransaction(source, replyAction, inputs, outputs) {
       console.debug('[YOROI-LB]::signTransaction::' + replyAction + '::args::inputs::' + JSON.stringify(inputs) + '::outputs' + JSON.stringify(outputs));
       var transport = await _hwTransportWebauthn2.default.create();
       try {
         var adaApp = new _ledgerjsHwAppCardano2.default(transport);
         var res = await adaApp.signTransaction(inputs, outputs);
-        this.sendMessageToExtension({
+        this.sendMessageToExtension(source, {
           action: replyAction,
           success: true,
           payload: res
@@ -14764,7 +14764,7 @@ var YoroiLedgerBridge = function () {
       } catch (err) {
         console.error('[YOROI-LB]::signTransaction::' + replyAction + '::error::' + JSON.stringify(err));
         var e = this.ledgerErrToMessage(err);
-        this.sendMessageToExtension({
+        this.sendMessageToExtension(source, {
           action: replyAction,
           success: false,
           payload: { error: e.toString() }
@@ -14792,13 +14792,13 @@ var YoroiLedgerBridge = function () {
 
   }, {
     key: 'deriveAddress',
-    value: async function deriveAddress(replyAction, hdPath) {
+    value: async function deriveAddress(source, replyAction, hdPath) {
       console.debug('[YOROI-LB]::deriveAddress::' + replyAction + '::args::hdPath::' + JSON.stringify(hdPath));
       var transport = await _hwTransportWebauthn2.default.create();
       try {
         var adaApp = new _ledgerjsHwAppCardano2.default(transport);
         var res = await adaApp.deriveAddress(hdPath);
-        this.sendMessageToExtension({
+        this.sendMessageToExtension(source, {
           action: replyAction,
           success: true,
           payload: res
@@ -14806,7 +14806,7 @@ var YoroiLedgerBridge = function () {
       } catch (err) {
         console.error('[YOROI-LB]::deriveAddress::' + replyAction + '::error::' + JSON.stringify(err));
         var e = this.ledgerErrToMessage(err);
-        this.sendMessageToExtension({
+        this.sendMessageToExtension(source, {
           action: replyAction,
           success: false,
           payload: { error: e.toString() }
@@ -14835,13 +14835,13 @@ var YoroiLedgerBridge = function () {
 
   }, {
     key: 'showAddress',
-    value: async function showAddress(replyAction, hdPath) {
+    value: async function showAddress(source, replyAction, hdPath) {
       console.debug('[YOROI-LB]::showAddress::' + replyAction + '::args::hdPath::' + JSON.stringify(hdPath));
       var transport = await _hwTransportWebauthn2.default.create();
       try {
         var adaApp = new _ledgerjsHwAppCardano2.default(transport);
         adaApp.showAddress(hdPath);
-        this.sendMessageToExtension({
+        this.sendMessageToExtension(source, {
           action: replyAction,
           success: true,
           payload: undefined
@@ -14849,7 +14849,7 @@ var YoroiLedgerBridge = function () {
       } catch (err) {
         console.debug('[YOROI-LB]::showAddress::' + replyAction + '::error::' + JSON.stringify(err));
         var e = this.ledgerErrToMessage(err);
-        this.sendMessageToExtension({
+        this.sendMessageToExtension(source, {
           action: replyAction,
           success: false,
           payload: { error: e.toString() }
@@ -14872,19 +14872,19 @@ var YoroiLedgerBridge = function () {
           var replyAction = _action + '-reply';
           switch (_action) {
             case 'ledger-get-version':
-              _this.getVersion(replyAction);
+              _this.getVersion(e.source, replyAction);
               break;
             case 'ledger-get-extended-public-key':
-              _this.getExtendedPublicKey(replyAction, params.hdPath);
+              _this.getExtendedPublicKey(e.source, replyAction, params.hdPath);
               break;
             case 'ledger-sign-transaction':
-              _this.signTransaction(replyAction, params.inputs, params.outputs);
+              _this.signTransaction(e.source, replyAction, params.inputs, params.outputs);
               break;
             case 'ledger-derive-address':
-              _this.deriveAddress(replyAction, params.hdPath);
+              _this.deriveAddress(e.source, replyAction, params.hdPath);
               break;
             case 'ledger-show-address':
-              _this.showAddress(replyAction, params.hdPath);
+              _this.showAddress(e.source, replyAction, params.hdPath);
               break;
           }
         }
@@ -14892,8 +14892,9 @@ var YoroiLedgerBridge = function () {
     }
   }, {
     key: 'sendMessageToExtension',
-    value: function sendMessageToExtension(msg) {
-      window.parent.postMessage(msg, '*');
+    value: function sendMessageToExtension(source, msg) {
+      // window.parent.postMessage(msg, '*');
+      source.postMessage(msg, '*');
     }
   }, {
     key: 'ledgerErrToMessage',
