@@ -38,6 +38,7 @@ export class LedgerBridge extends EventEmitter {
   
   isReady: boolean;
   bridgeUrl: string;
+  connectionType: ConnectionType;
   iframe: HTMLIFrameElement;
   targetWindow: window;
 
@@ -53,6 +54,7 @@ export class LedgerBridge extends EventEmitter {
   ) {
     super();
     this.bridgeUrl = bridgeOverride;
+    this.connectionType = connectionType;
     this._setupTarget()
   }
 
@@ -61,7 +63,7 @@ export class LedgerBridge extends EventEmitter {
     switch(this.connectionType) {
       case ConnectionTypeValue.U2F:
         const iframe = document.createElement('iframe');
-        iframe.src = bridgeUrl;
+        iframe.src = this.bridgeUrl;
         iframe.id = YOROI_LEDGER_BRIDGE_TARGET_NAME;
         
         if (document.head) {
@@ -78,7 +80,6 @@ export class LedgerBridge extends EventEmitter {
       default:
         console.error('[YOROI-LB-CONNECTOR]:: Un-supported Connection Type');
         throw new Error('[YOROI-LB-CONNECTOR]:: Un-supported Connection Type');
-        break;
     }
   }
 
