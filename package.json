@@ -6,8 +6,8 @@
   "license": "MIT",
   "main": "./src/main.js",
   "engines": {
-    "node": "8.15.0",
-    "npm": "6.4.1"
+    "node": "10.16.0",
+    "npm": "6.9.0"
   },
   "scripts": {
     "start": "gulp",

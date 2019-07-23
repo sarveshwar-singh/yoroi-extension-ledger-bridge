@@ -14476,8 +14476,8 @@ module.exports={
   "license": "MIT",
   "main": "./src/main.js",
   "engines": {
-    "node": "8.15.0",
-    "npm": "6.4.1"
+    "node": "10.16.0",
+    "npm": "6.9.0"
   },
   "scripts": {
     "start": "gulp",
@@ -14636,7 +14636,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var YOROI_LEDGER_BRIDGE_IFRAME_NAME = 'YOROI-LEDGER-BRIDGE-IFRAME';
+var YOROI_LEDGER_BRIDGE_TARGET_NAME = 'YOROI-LEDGER-BRIDGE';
 
 var YoroiLedgerBridge = function () {
   function YoroiLedgerBridge(transportGenerator) {
