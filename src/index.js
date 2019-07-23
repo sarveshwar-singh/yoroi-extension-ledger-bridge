@@ -20,7 +20,7 @@ const PURPOSE = 44;
 const COIN_TYPE = 1815; // Cardano
 
 const BRIDGE_URL = 'https://sarveshwar-singh.github.io/yoroi-extension-ledger-bridge-webauthn';
-export const YOROI_LEDGER_BRIDGE_IFRAME_NAME = 'YOROI-LEDGER-BRIDGE-IFRAME';
+export const YOROI_LEDGER_BRIDGE_TARGET_NAME = 'YOROI-LEDGER-BRIDGE';
 
 type MessageType = {
   target?: string,
@@ -165,7 +165,7 @@ export class LedgerBridge extends EventEmitter {
     msg: MessageType,
     cb: ({ success: boolean, payload: any}) => void
   ) {
-    msg.target = YOROI_LEDGER_BRIDGE_IFRAME_NAME;
+    msg.target = YOROI_LEDGER_BRIDGE_TARGET_NAME;
     this.iframe.contentWindow.postMessage(msg, '*');
     window.addEventListener('message', ({ origin, data }) => {
       if (origin !== _getOrigin(this.bridgeUrl)) return false;
@@ -189,7 +189,7 @@ function _getOrigin (bridgeUrl: string): string {
 function _setupIframe (bridgeUrl: string): HTMLIFrameElement {
   const iframe = document.createElement('iframe');
   iframe.src = bridgeUrl;
-  iframe.id = YOROI_LEDGER_BRIDGE_IFRAME_NAME;
+  iframe.id = YOROI_LEDGER_BRIDGE_TARGET_NAME;
   
   if (document.head) {
     document.head.appendChild(iframe);
