@@ -18,7 +18,7 @@ type MessageType = {
   payload: any
 };
 
-const YOROI_LEDGER_BRIDGE_IFRAME_NAME = 'YOROI-LEDGER-BRIDGE-IFRAME';
+const YOROI_LEDGER_BRIDGE_TEARGET_NAME = 'YOROI-LEDGER-BRIDGE';
 
 export default class YoroiLedgerBridge {
 
@@ -62,22 +62,24 @@ export default class YoroiLedgerBridge {
     try {
       const adaApp = new AdaApp(transport);
       const res = await adaApp.getVersion();
-      this.sendMessageToExtension(source,
+      this.sendMessage(
+        source,
         {
           action: replyAction,
           success: true,
           payload: res,
-      });
+        });
       return res;
     } catch (err) {
       console.error(`[YOROI-LB]::getVersion::${replyAction}::error::${JSON.stringify(err)}`);
       const e = this.ledgerErrToMessage(err);
-      this.sendMessageToExtension(source,
+      this.sendMessage(
+        source,
         {
-        action: replyAction,
-        success: false,
-        payload: { error: e.toString() },
-      });
+          action: replyAction,
+          success: false,
+          payload: { error: e.toString() }
+        });
     } finally {
       transport.close();
     }   
@@ -105,22 +107,24 @@ export default class YoroiLedgerBridge {
     try {
       const adaApp = new AdaApp(transport);
       const res = await adaApp.getExtendedPublicKey(hdPath);
-      this.sendMessageToExtension(source,
+      this.sendMessage(
+        source,
         {
           action: replyAction,
           success: true,
           payload: res,
-      });
+        });
       return res;
     } catch (err) {
       console.error(`[YOROI-LB]::getExtendedPublicKey::${replyAction}::error::${JSON.stringify(err)}`);
       const e = this.ledgerErrToMessage(err)
-      this.sendMessageToExtension(source,
+      this.sendMessage(
+        source,
         {
-        action: replyAction,
-        success: false,
-        payload: { error: e.toString() },
-      });
+          action: replyAction,
+          success: false,
+          payload: { error: e.toString() }
+        });
     } finally {
       transport.close();
     }
@@ -142,21 +146,23 @@ export default class YoroiLedgerBridge {
     try {
       const adaApp = new AdaApp(transport);
       const res = await adaApp.signTransaction(inputs, outputs);
-      this.sendMessageToExtension(source,
+      this.sendMessage(
+        source,
         {
           action: replyAction,
           success: true,
           payload: res,
-      });
+        });
     } catch (err) {
       console.error(`[YOROI-LB]::signTransaction::${replyAction}::error::${JSON.stringify(err)}`);
       const e = this.ledgerErrToMessage(err);
-      this.sendMessageToExtension(source,
+      this.sendMessage(
+        source,
         {
           action: replyAction,
           success: false,
-          payload: { error: e.toString() },
-      });
+          payload: { error: e.toString() }
+        });
     } finally {
       transport.close();
     }
@@ -187,21 +193,23 @@ export default class YoroiLedgerBridge {
     try {
       const adaApp = new AdaApp(transport);
       const res = await adaApp.deriveAddress(hdPath)
-      this.sendMessageToExtension(source,
+      this.sendMessage(
+        source,
         {
           action: replyAction,
           success: true,
           payload: res,
-      });
+        });
     } catch (err) {
       console.error(`[YOROI-LB]::deriveAddress::${replyAction}::error::${JSON.stringify(err)}`);
       const e = this.ledgerErrToMessage(err);
-      this.sendMessageToExtension(source,
+      this.sendMessage(
+        source,
         {
           action: replyAction,
           success: false,
           payload: { error: e.toString() },
-      });
+        });
     } finally {
       transport.close();
     }
@@ -233,21 +241,23 @@ export default class YoroiLedgerBridge {
     try {
       const adaApp = new AdaApp(transport);
       adaApp.showAddress(hdPath)
-      this.sendMessageToExtension(source,
+      this.sendMessage(
+        source,
         {
           action: replyAction,
           success: true,
           payload: undefined
-      });
+        });
     } catch (err) {
       console.debug(`[YOROI-LB]::showAddress::${replyAction}::error::${JSON.stringify(err)}`);
       const e = this.ledgerErrToMessage(err);
-      this.sendMessageToExtension(source,
+      this.sendMessage(
+        source,
         {
           action: replyAction,
           success: false,
-          payload: { error: e.toString() },
-      });
+          payload: { error: e.toString() }
+        });
     } finally {
       transport.close();
     }
@@ -255,7 +265,7 @@ export default class YoroiLedgerBridge {
 
   addEventListeners(): void {
     window.addEventListener('message', async e => {
-      if (e && e.data && e.data.target === YOROI_LEDGER_BRIDGE_IFRAME_NAME) {
+      if (e && e.data && e.data.target === YOROI_LEDGER_BRIDGE_TEARGET_NAME) {
         const { action, params } = e.data;
         const replyAction = `${action}-reply`;
         switch (action) {
@@ -279,9 +289,12 @@ export default class YoroiLedgerBridge {
     }, false)
   }
 
-  sendMessageToExtension(source: window, msg: MessageType): void {
-    // window.parent.postMessage(msg, '*');
-    source.postMessage(msg, '*');
+  sendMessage(source: window, msg: MessageType): void {
+    if (source) {
+      source.postMessage(msg, '*');
+    } else {
+      console.error('[YOROI-LB]::showAddress::No Source window provided');
+    }
   }  
 
   ledgerErrToMessage (err: any): any {
