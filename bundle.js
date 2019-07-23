@@ -15893,7 +15893,7 @@ var YoroiLedgerBridge = function () {
       if (source) {
         source.postMessage(msg, '*');
       } else {
-        console.error('[YOROI-LB]::showAddress::No Source window provided');
+        console.error('[YOROI-LB]::sendMessage::No Source window provided');
       }
     }
   }, {
