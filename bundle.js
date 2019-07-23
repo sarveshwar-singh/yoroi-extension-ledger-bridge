@@ -15481,7 +15481,7 @@ makeDefault( 'sign' );
 },{"./google-u2f-api":441}],443:[function(require,module,exports){
 module.exports={
   "name": "yoroi-extension-ledger-bridge-connector",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "Yoroi Extension Ledger hardware wallet bridge connector",
   "author": "EMURGO.io",
   "license": "MIT",
@@ -15558,19 +15558,20 @@ var init = async function init() {
       transportGenerator = function transportGenerator() {
         return TransportU2F.create();
       };
-
-      window.onload = function (e) {
-        var buttonLog = document.getElementById("versionButton");
-        if (!buttonLog) {
-          return;
-        }
-
-        buttonLog.addEventListener('click', async function () {
-          return logConnectedDeviceVersion();
-        });
-      };
     }
     bridge = new _yoroiLedgerBridge2.default(transportGenerator);
+
+    // Test Events
+    window.onload = function (e) {
+      var buttonLog = document.getElementById("versionButton");
+      if (!buttonLog) {
+        return;
+      }
+
+      buttonLog.addEventListener('click', async function () {
+        return logConnectedDeviceVersion();
+      });
+    };
 
     if (bridge) {
       onSuccess(bridge);

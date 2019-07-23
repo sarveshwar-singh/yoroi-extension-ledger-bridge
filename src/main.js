@@ -17,18 +17,19 @@ const init = async () => {
     } else {
       const TransportU2F = require('@ledgerhq/hw-transport-u2f').default;
       transportGenerator = () => TransportU2F.create();
-
-      window.onload = function(e) {
-        const buttonLog = document.getElementById("versionButton");
-        if (!buttonLog) {
-          return;
-        }
-
-        buttonLog.addEventListener('click', async () => logConnectedDeviceVersion());
-      }
     }
     bridge = new YoroiLedgerBridge(transportGenerator);
 
+    // Test Events
+    window.onload = function(e) {
+      const buttonLog = document.getElementById("versionButton");
+      if (!buttonLog) {
+        return;
+      }
+
+      buttonLog.addEventListener('click', async () => logConnectedDeviceVersion());
+    }
+    
     if (bridge) {
       onSuccess(bridge);
     } else {
