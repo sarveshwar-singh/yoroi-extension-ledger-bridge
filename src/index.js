@@ -48,14 +48,15 @@ export class LedgerBridge extends EventEmitter {
    * @param {*} bridgeOverride 
    * @param {*} connectionType 'webauthn' | 'u2f'
    */
-  constructor (
-    bridgeOverride: string = BRIDGE_URL,
-    connectionType: ConnectionType = ConnectionTypeValue.U2F,
+  constructor (config : {
+      connectionType: ConnectionType,
+      bridgeOverride: string
+    }
   ) {
     super();
-    this.bridgeUrl = bridgeOverride;
-    this.connectionType = connectionType;
-    this._setupTarget()
+    this.bridgeUrl = config.bridgeOverride || BRIDGE_URL;
+    this.connectionType = config.connectionType || ConnectionTypeValue.WEB_AUTHN;
+    this._setupTarget();
   }
 
   _setupTarget(): void {
