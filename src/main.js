@@ -9,6 +9,7 @@ const get_param = window.location.search.substr(1);
 
 const init = async () => {
   console.info(`[YOROI-LB] Version: ${version}`);
+  console.info(`[YOROI-LB] Transport: ${get_param}`);
   try {
     let transportGenerator;
     if (get_param === 'webauthn') {
