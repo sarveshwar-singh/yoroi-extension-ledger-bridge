@@ -72,22 +72,40 @@ export class LedgerBridge extends EventEmitter {
         }
       
         this.iframe = iframe;
-        this.iframe.onload = this._onReady;
+        this.iframe.onload = this._testBridgeReady;
         break;
       case ConnectionTypeValue.WEB_AUTHN:
         this.targetWindow = window.open(this.bridgeUrl);
-        this.targetWindow.onload = this._onReady;       
+        this._testBridgeReady();
         break;
       default:
-        console.error('[YOROI-LB-CONNECTOR]:: Un-supported Connection Type');
-        throw new Error('[YOROI-LB-CONNECTOR]:: Un-supported Connection Type');
+        console.error('[YOROI-LB-CONNECTOR]:: Un-supported Transport protocol');
+        throw new Error('[YOROI-LB-CONNECTOR]:: Un-supported Transport protocol');
     }
+  }
+
+  _testBridgeReady(): Promise<void> {
+    return new Promise((resolve, reject) => {
+      this._sendMessage({
+        action: 'is-ready',
+        params: {
+        },
+      },
+      ({success, payload}) => {
+        if (success) {
+          this._onReady();
+          resolve();
+        } else {
+          reject(new Error(_prepareError(payload)))
+        }
+      });
+    });
   }
 
   _onReady(): void {
     this.isReady = true;
     console.debug('[YOROI-LB-CONNECTOR]:: Bridge is completely loaded');
-  }
+  }  
 
   // ==============================
   //   Interface with Cardano app
