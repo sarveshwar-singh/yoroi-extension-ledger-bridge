@@ -54,8 +54,9 @@ export class LedgerBridge extends EventEmitter {
     }
   ) {
     super();
-    this.bridgeUrl = (config && config.bridgeOverride) || BRIDGE_URL;
     this.connectionType = (config && config.connectionType) || ConnectionTypeValue.WEB_AUTHN;
+    this.bridgeUrl = (config && config.bridgeOverride) || BRIDGE_URL;
+    this.bridgeUrl = `${this.bridgeUrl}?${this.connectionType}`
     this._setupTarget();
   }
 
