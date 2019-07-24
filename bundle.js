@@ -15481,7 +15481,7 @@ makeDefault( 'sign' );
 },{"./google-u2f-api":441}],443:[function(require,module,exports){
 module.exports={
   "name": "yoroi-extension-ledger-bridge-connector",
-  "version": "2.1.1",
+  "version": "2.1.2",
   "description": "Yoroi Extension Ledger hardware wallet bridge connector",
   "author": "EMURGO.io",
   "license": "MIT",
@@ -15546,15 +15546,16 @@ var get_param = window.location.search.substr(1);
 
 var init = async function init() {
   console.info('[YOROI-LB] Version: ' + _package.version);
-  console.info('[YOROI-LB] Transport: ' + get_param);
   try {
     var transportGenerator = void 0;
     if (get_param === 'webauthn') {
+      console.info('[YOROI-LB] Transport: webauthn');
       var TransportWebAuthn = require('@ledgerhq/hw-transport-webauthn').default;
       transportGenerator = function transportGenerator() {
         return TransportWebAuthn.create();
       };
     } else {
+      console.info('[YOROI-LB] Transport: u2f');
       var TransportU2F = require('@ledgerhq/hw-transport-u2f').default;
       transportGenerator = function transportGenerator() {
         return TransportU2F.create();
@@ -15577,7 +15578,7 @@ var init = async function init() {
     if (bridge) {
       onSuccess(bridge);
     } else {
-      onError();
+      throw new Error('Something unexpected happened');
     }
   } catch (error) {
     onError(error);
