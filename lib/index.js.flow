@@ -99,6 +99,22 @@ export class LedgerBridge extends EventEmitter {
     });
   }
 
+  dispose(): void {
+    const element = document.getElementById(YOROI_LEDGER_BRIDGE_TARGET_NAME);
+    if (element instanceof HTMLIFrameElement) {
+      element.remove();
+    }
+    this.iframe = undefined;
+
+    if(this.targetWindow) {
+      this.targetWindow.close();
+    }
+    this.targetWindow = undefined;
+
+    this.bridgeUrl = undefined;
+    this.connectionType = undefined;
+  }
+
   // ==============================
   //   Interface with Cardano app
   // ==============================
