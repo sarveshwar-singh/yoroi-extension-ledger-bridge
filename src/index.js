@@ -104,15 +104,10 @@ export class LedgerBridge extends EventEmitter {
     if (element instanceof HTMLIFrameElement) {
       element.remove();
     }
-    this.iframe = undefined;
 
     if(this.targetWindow) {
       this.targetWindow.close();
     }
-    this.targetWindow = undefined;
-
-    this.bridgeUrl = undefined;
-    this.connectionType = undefined;
   }
 
   // ==============================
@@ -238,14 +233,15 @@ export class LedgerBridge extends EventEmitter {
 
     window.addEventListener('message', ({ origin, data }) => {
       if (origin !== _getOrigin(this.bridgeUrl)) {
-        throw new Error(`[YOROI-LB-CONNECTOR]::_sendMessage::${this.connectionType}::${data.action}:: Unknown origin: ${origin}`);
+        throw new Error(`[YOROI-LB-CONNECTOR]::_sendMessage::${this.connectionType}::${msg.action}::${data.action}:: Unknown origin: ${origin}`);
       }
 
-      console.debug(`[YOROI-LB-CONNECTOR]::_sendMessage::${this.connectionType}::${data.action}`);
+      console.debug(`[YOROI-LB-CONNECTOR]::_sendMessage::${this.connectionType}::${msg.action}::${data.action}`);
+
       if (data && data.action && data.action === `${msg.action}-reply`) {
         cb(data);
       } else {
-        throw new Error(`[YOROI-LB-CONNECTOR]::_sendMessage::${this.connectionType}::${data.action}:: unexpected replay`);
+        throw new Error(`[YOROI-LB-CONNECTOR]::_sendMessage::${this.connectionType}::${msg.action}::${data.action}:: unexpected replay`);
       }
     })
   }
