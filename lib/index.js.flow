@@ -35,8 +35,7 @@ export const ConnectionTypeValue = Object.freeze({
 export type ConnectionType = $Values<typeof ConnectionTypeValue>;
 
 export class LedgerBridge extends EventEmitter {
-  
-  isReady: boolean;
+
   bridgeUrl: string;
   connectionType: ConnectionType;
   iframe: HTMLIFrameElement;
@@ -45,8 +44,8 @@ export class LedgerBridge extends EventEmitter {
   /**
    * Use `bridgeOverride` to use this library with your own website
    * 
-   * @param {*} bridgeOverride 
    * @param {*} connectionType 'webauthn' | 'u2f'
+   * @param {*} bridgeOverride 
    */
   constructor (config? : {
       connectionType?: ConnectionType,
@@ -55,13 +54,12 @@ export class LedgerBridge extends EventEmitter {
   ) {
     super();
     this.connectionType = (config && config.connectionType) || ConnectionTypeValue.WEB_AUTHN;
-    this.bridgeUrl = (config && config.bridgeOverride) || BRIDGE_URL;
-    this.bridgeUrl = `${this.bridgeUrl}?${this.connectionType}`
+    const bridgeURL = (config && config.bridgeOverride) || BRIDGE_URL;
+    this.bridgeUrl = `${bridgeURL}?${this.connectionType}`
     this._setupTarget();
   }
 
   _setupTarget(): void {
-    this.isReady = false;
     switch(this.connectionType) {
       case ConnectionTypeValue.U2F:
         const iframe = document.createElement('iframe');
@@ -73,11 +71,9 @@ export class LedgerBridge extends EventEmitter {
         }
       
         this.iframe = iframe;
-        this.iframe.onload = this._testBridgeReady;
         break;
       case ConnectionTypeValue.WEB_AUTHN:
         this.targetWindow = window.open(this.bridgeUrl);
-        this._testBridgeReady();
         break;
       default:
         console.error('[YOROI-LB-CONNECTOR]:: Un-supported Transport protocol');
@@ -85,7 +81,7 @@ export class LedgerBridge extends EventEmitter {
     }
   }
 
-  _testBridgeReady(): Promise<void> {
+  isBridgeReady(): Promise<boolean> {
     return new Promise((resolve, reject) => {
       this._sendMessage({
         action: 'is-ready',
@@ -94,19 +90,14 @@ export class LedgerBridge extends EventEmitter {
       },
       ({success, payload}) => {
         if (success) {
-          this._onReady();
-          resolve();
+          console.debug('[YOROI-LB-CONNECTOR]:: Ledger Bridge is completely loaded');
+          resolve(true);
         } else {
           reject(new Error(_prepareError(payload)))
         }
       });
     });
   }
-
-  _onReady(): void {
-    this.isReady = true;
-    console.debug('[YOROI-LB-CONNECTOR]:: Bridge is completely loaded');
-  }  
 
   // ==============================
   //   Interface with Cardano app
@@ -217,16 +208,28 @@ export class LedgerBridge extends EventEmitter {
   ) {
     msg.target = YOROI_LEDGER_BRIDGE_TARGET_NAME;
 
-    if (this.connectionType === ConnectionTypeValue.U2F) {
-      this.iframe.contentWindow.postMessage(msg, '*');
-    } else if (this.connectionType === ConnectionTypeValue.WEB_AUTHN) {
-      this.targetWindow.postMessage(msg, this.bridgeUrl);
+    console.debug(`[YOROI-LB-CONNECTOR]::_sendMessage::${this.connectionType}::${msg.action}`);
+    switch(this.connectionType) {
+      case ConnectionTypeValue.U2F:
+        this.iframe.contentWindow.postMessage(msg, '*');
+        break;
+      case ConnectionTypeValue.WEB_AUTHN:
+        this.targetWindow.postMessage(msg, this.bridgeUrl);
+        break;
+      default:
+        throw new Error('[YOROI-LB-CONNECTOR]:: Un-supported Transport protocol');  
     }
 
     window.addEventListener('message', ({ origin, data }) => {
-      if (origin !== _getOrigin(this.bridgeUrl)) return false;
+      if (origin !== _getOrigin(this.bridgeUrl)) {
+        throw new Error(`[YOROI-LB-CONNECTOR]::_sendMessage::${this.connectionType}::${data.action}:: Unknown origin: ${origin}`);
+      }
+
+      console.debug(`[YOROI-LB-CONNECTOR]::_sendMessage::${this.connectionType}::${data.action}`);
       if (data && data.action && data.action === `${msg.action}-reply`) {
         cb(data);
+      } else {
+        throw new Error(`[YOROI-LB-CONNECTOR]::_sendMessage::${this.connectionType}::${data.action}:: unexpected replay`);
       }
     })
   }
