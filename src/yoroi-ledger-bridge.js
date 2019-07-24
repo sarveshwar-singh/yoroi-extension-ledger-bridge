@@ -253,7 +253,7 @@ export default class YoroiLedgerBridge {
           payload: undefined
         });
     } catch (err) {
-      console.debug(`[YOROI-LB]::showAddress::${replyAction}::error::${JSON.stringify(err)}`);
+      console.error(`[YOROI-LB]::showAddress::${replyAction}::error::${JSON.stringify(err)}`);
       const e = this.ledgerErrToMessage(err);
       this.sendMessage(
         source,
@@ -267,12 +267,41 @@ export default class YoroiLedgerBridge {
     }
   }
 
+  async isReady(
+    source: window,
+    replyAction: string
+  ): Promise<void> {
+    try {
+      console.debug(`[YOROI-LB]::isReady::${replyAction}`);
+      this.sendMessage(
+        source,
+        {
+          action: replyAction,
+          success: true,
+          payload: true
+        });
+    } catch (err) {
+      console.error(`[YOROI-LB]::isReady::${replyAction}::error::${JSON.stringify(err)}`);
+      const e = this.ledgerErrToMessage(err);
+      this.sendMessage(
+        source,
+        {
+          action: replyAction,
+          success: false,
+          payload: { error: err.toString() }
+        });
+    }
+  }  
+
   addEventListeners(): void {
     window.addEventListener('message', async e => {
       if (e && e.data && e.data.target === YOROI_LEDGER_BRIDGE_TEARGET_NAME) {
         const { action, params } = e.data;
         const replyAction = `${action}-reply`;
         switch (action) {
+          case 'is-ready':
+            this.isReady(e.source, replyAction)
+            break;          
           case 'ledger-get-version':
             this.getVersion(e.source, replyAction)
             break;

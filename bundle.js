@@ -15481,7 +15481,7 @@ makeDefault( 'sign' );
 },{"./google-u2f-api":441}],443:[function(require,module,exports){
 module.exports={
   "name": "yoroi-extension-ledger-bridge-connector",
-  "version": "2.0.1",
+  "version": "2.1.0",
   "description": "Yoroi Extension Ledger hardware wallet bridge connector",
   "author": "EMURGO.io",
   "license": "MIT",
@@ -15845,7 +15845,7 @@ var YoroiLedgerBridge = function () {
           payload: undefined
         });
       } catch (err) {
-        console.debug('[YOROI-LB]::showAddress::' + replyAction + '::error::' + JSON.stringify(err));
+        console.error('[YOROI-LB]::showAddress::' + replyAction + '::error::' + JSON.stringify(err));
         var e = this.ledgerErrToMessage(err);
         this.sendMessage(source, {
           action: replyAction,
@@ -15854,6 +15854,26 @@ var YoroiLedgerBridge = function () {
         });
       } finally {
         transport && transport.close();
+      }
+    }
+  }, {
+    key: 'isReady',
+    value: async function isReady(source, replyAction) {
+      try {
+        console.debug('[YOROI-LB]::isReady::' + replyAction);
+        this.sendMessage(source, {
+          action: replyAction,
+          success: true,
+          payload: true
+        });
+      } catch (err) {
+        console.error('[YOROI-LB]::isReady::' + replyAction + '::error::' + JSON.stringify(err));
+        var e = this.ledgerErrToMessage(err);
+        this.sendMessage(source, {
+          action: replyAction,
+          success: false,
+          payload: { error: err.toString() }
+        });
       }
     }
   }, {
@@ -15869,6 +15889,9 @@ var YoroiLedgerBridge = function () {
 
           var replyAction = _action + '-reply';
           switch (_action) {
+            case 'is-ready':
+              _this.isReady(e.source, replyAction);
+              break;
             case 'ledger-get-version':
               _this.getVersion(e.source, replyAction);
               break;
