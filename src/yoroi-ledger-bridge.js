@@ -244,13 +244,13 @@ export default class YoroiLedgerBridge {
       console.debug(`[YOROI-LB]::showAddress::${replyAction}::args::hdPath::${JSON.stringify(hdPath)}`);
       transport = await this.transportGenerator();
       const adaApp = new AdaApp(transport);
-      adaApp.showAddress(hdPath)
+      const res = await adaApp.showAddress(hdPath);
       this.sendMessage(
         source,
         {
           action: replyAction,
           success: true,
-          payload: undefined
+          payload: res
         });
     } catch (err) {
       console.error(`[YOROI-LB]::showAddress::${replyAction}::error::${JSON.stringify(err)}`);

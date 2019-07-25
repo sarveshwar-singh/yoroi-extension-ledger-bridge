@@ -15481,7 +15481,7 @@ makeDefault( 'sign' );
 },{"./google-u2f-api":441}],443:[function(require,module,exports){
 module.exports={
   "name": "yoroi-extension-ledger-bridge-connector",
-  "version": "2.1.2",
+  "version": "2.1.3",
   "description": "Yoroi Extension Ledger hardware wallet bridge connector",
   "author": "EMURGO.io",
   "license": "MIT",
@@ -15840,11 +15840,11 @@ var YoroiLedgerBridge = function () {
         console.debug('[YOROI-LB]::showAddress::' + replyAction + '::args::hdPath::' + JSON.stringify(hdPath));
         transport = await this.transportGenerator();
         var adaApp = new _ledgerjsHwAppCardano2.default(transport);
-        adaApp.showAddress(hdPath);
+        var res = await adaApp.showAddress(hdPath);
         this.sendMessage(source, {
           action: replyAction,
           success: true,
-          payload: undefined
+          payload: res
         });
       } catch (err) {
         console.error('[YOROI-LB]::showAddress::' + replyAction + '::error::' + JSON.stringify(err));
