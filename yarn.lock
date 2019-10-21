@@ -171,15 +171,44 @@
     lodash "^4.17.11"
     to-fast-properties "^2.0.0"
 
-"@cardano-foundation/ledgerjs-hw-app-cardano@1.0.6":
-  version "1.0.6"
-  resolved "https://registry.yarnpkg.com/@cardano-foundation/ledgerjs-hw-app-cardano/-/ledgerjs-hw-app-cardano-1.0.6.tgz#8d8f22e61ef2013686b22f6387976ed0dcf464cc"
-  integrity sha512-XBC9VDo4q/cnbe1qlpSfu2ySR6ojvfocSEc0AuEgoi5mkjiY87OVbptT2HAYxqrYcfXfG3kcf7bzUFL0yrG3Mw==
+"@cardano-foundation/ledgerjs-hw-app-cardano@1.0.7":
+  version "1.0.7"
+  resolved "https://registry.yarnpkg.com/@cardano-foundation/ledgerjs-hw-app-cardano/-/ledgerjs-hw-app-cardano-1.0.7.tgz#86c0fd545e71749302d5130af400238739a424df"
+  integrity sha512-jiJrH2KNF4IQkEaYt14KUe+DrEdRwz1Mc6/1UOc55tlynI3ApHkxGzokjv/1GaJ5dkkcgWLDU9N5SZxXJAoGVA==
   dependencies:
+    "@ledgerhq/hw-transport" "^4.35.0"
     babel-polyfill "^6.26.0"
     babel-runtime "^6.26.0"
     base-x "^3.0.5"
     node-int64 "^0.4.0"
+
+"@ledgerhq/devices@^4.72.2":
+  version "4.72.2"
+  resolved "https://registry.yarnpkg.com/@ledgerhq/devices/-/devices-4.72.2.tgz#9f91371c6a08cd4d93be0d6fe1c5d53a9ccd4a14"
+  integrity sha512-iX6ZfxFrKxlO3A7rDypjsqbu1Ta2IB+OsOk/7jnd3fzcvwlSEQwflAHb81CsjOPhdVG2aPIFU/VxzMioDFz24g==
+  dependencies:
+    "@ledgerhq/errors" "^4.72.2"
+    "@ledgerhq/logs" "^4.72.0"
+    rxjs "^6.5.3"
+
+"@ledgerhq/errors@^4.72.2":
+  version "4.72.2"
+  resolved "https://registry.yarnpkg.com/@ledgerhq/errors/-/errors-4.72.2.tgz#62a87a249c3c05e7295f66c3d49d78e7d46d611f"
+  integrity sha512-Q9SnjsoIiNhoTujUWfNgGqvYHgaPGRLzuYAC0Rx2WjEKp7swO42BMukYtSgXyyrz4yfHhMBMYerEF2sonBVzXw==
+
+"@ledgerhq/hw-transport@^4.35.0":
+  version "4.72.2"
+  resolved "https://registry.yarnpkg.com/@ledgerhq/hw-transport/-/hw-transport-4.72.2.tgz#b13d1797ba7530b9b94ebee71f3d0d2185153988"
+  integrity sha512-HYe3kTNoA9YHGCsktAzMURpXqZ1QvMUreI24GhMKfec6AIuB0d05avn2j7z8QeOpAUh5L6/OaPPWi9t4KpqG5A==
+  dependencies:
+    "@ledgerhq/devices" "^4.72.2"
+    "@ledgerhq/errors" "^4.72.2"
+    events "^3.0.0"
+
+"@ledgerhq/logs@^4.72.0":
+  version "4.72.0"
+  resolved "https://registry.yarnpkg.com/@ledgerhq/logs/-/logs-4.72.0.tgz#43df23af013ad1135407e5cf33ca6e4c4c7708d5"
+  integrity sha512-o+TYF8vBcyySRsb2kqBDv/KMeme8a2nwWoG+lAWzbDmWfb2/MrVWYCVYDYvjXdSoI/Cujqy1i0gIDrkdxa9chA==
 
 abbrev@1:
   version "1.1.1"
@@ -777,6 +806,11 @@ events@^2.0.0:
   version "2.1.0"
   resolved "https://registry.yarnpkg.com/events/-/events-2.1.0.tgz#2a9a1e18e6106e0e812aa9ebd4a819b3c29c0ba5"
   integrity sha512-3Zmiobend8P9DjmKAty0Era4jV8oJ0yGYe2nJJAxgymF9+N8F2m0hhZiMoWtcfepExzNKZumFU3ksdQbInGWCg==
+
+events@^3.0.0:
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/events/-/events-3.0.0.tgz#9a0a0dfaf62893d92b875b8f2698ca4114973e88"
+  integrity sha512-Dc381HFWJzEOhQ+d8pkNon++bk9h6cdAoAj4iE6Q4y6xgTzySWXlKn05/TVNpjnfRqi/X0EpJEJohPjNI3zpVA==
 
 execa@^1.0.0:
   version "1.0.0"
@@ -1966,6 +2000,13 @@ rxjs@^6.4.0:
   version "6.4.0"
   resolved "https://registry.yarnpkg.com/rxjs/-/rxjs-6.4.0.tgz#f3bb0fe7bda7fb69deac0c16f17b50b0b8790504"
   integrity sha512-Z9Yfa11F6B9Sg/BK9MnqnQ+aQYicPLtilXBp2yUtDt2JRCE0h26d33EnfO3ZxoNxG0T92OUucP3Ct7cpfkdFfw==
+  dependencies:
+    tslib "^1.9.0"
+
+rxjs@^6.5.3:
+  version "6.5.3"
+  resolved "https://registry.yarnpkg.com/rxjs/-/rxjs-6.5.3.tgz#510e26317f4db91a7eb1de77d9dd9ba0a4899a3a"
+  integrity sha512-wuYsAYYFdWTAnAaPoKGNhfpWwKZbJW+HgAJ+mImp+Epl7BG8oNWBCTyRM8gba9k4lk8BgWdoYm21Mo/RYhhbgA==
   dependencies:
     tslib "^1.9.0"
 
