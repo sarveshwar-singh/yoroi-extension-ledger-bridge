@@ -14,7 +14,7 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
-    "@cardano-foundation/ledgerjs-hw-app-cardano": "1.0.6",
+    "@cardano-foundation/ledgerjs-hw-app-cardano": "1.0.8",
     "events": "^2.0.0"
   },
   "devDependencies": {
